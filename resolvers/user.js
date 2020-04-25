@@ -1,8 +1,8 @@
 const { PubSub } = require("apollo-server");
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-const config = require('../config');
-const User = require('../models/user');
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const config = require("../config");
+const User = require("../models/user");
 const pubsub = new PubSub();
 
 const USER_ADDED = "USER_ADDED";
@@ -13,16 +13,36 @@ const USER_ADDED = "USER_ADDED";
 const UserQueries = {
   users: async (parent, args, context) => {
     try {
-      const users = await User.find();
-      return users
+      if (context.isAuth) {
+        const users = await User.find();
+        return users;
+      } else {
+        throw Error("You need to authenticate first");
+      }
     } catch (err) {
       throw err;
     }
   },
-  user: async (parent, { userId }) => {
+  user: async (parent, { userId }, context) => {
     try {
-      const user = await User.findById(userId);
-      return user;
+      if (context.isAuth) {
+        const user = await User.findById(userId);
+        return user;
+      } else {
+        throw Error("You need to authenticate first");
+      }
+    } catch (err) {
+      throw err;
+    }
+  },
+  self: async (parent, args, context) => {
+    try {
+      if (context.isAuth) {
+        const user = await User.findById(context.userId);
+        return user;
+      } else {
+        throw Error("You need to authenticate first");
+      }
     } catch (err) {
       throw err;
     }
@@ -82,13 +102,13 @@ const UserMutation = {
       throw error;
     }
   },
-  updateUser: async (parent, { userId, updateUser }, context) => {
+  updateUser: async (parent, { updateUser }, context) => {
     // If not authenticated throw error
     if (!context.isAuth) {
       throw new Error("Non Authenticated");
     }
     try {
-      const user = await User.findByIdAndUpdate(userId, updateUser, {
+      const user = await User.findByIdAndUpdate(context.userId, updateUser, {
         new: true
       });
       return user;

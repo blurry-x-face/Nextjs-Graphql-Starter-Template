@@ -1,15 +1,16 @@
-const { ApolloServer, gql } = require('apollo-server-express');
-const resolvers = require('../resolvers');
+const { ApolloServer, gql } = require("apollo-server-express");
+const resolvers = require("../resolvers");
 
 const typeDefs = gql`
   type Query {
     users: [User!]!
     user(userId: ID!): User!
+    self: Self!
     login(email: String!, password: String!): AuthData!
   }
   type Mutation {
     createUser(userInput: UserInput): AuthData!
-    updateUser(userId: ID!, updateUser: UpdateUser): User!
+    updateUser(updateUser: UpdateUser): User!
   }
   type Subscription {
     userAdded: User
@@ -18,7 +19,6 @@ const typeDefs = gql`
     _id: ID!
     email: String!
     name: String!
-    password: String
     createdAt: String!
     updatedAt: String!
   }
@@ -30,21 +30,31 @@ const typeDefs = gql`
   input UserInput {
     email: String!
     name: String!
-    password: String!
   }
   input UpdateUser {
     email: String
     name: String
-    password: String
+  }
+  type Self {
+    _id: ID!
+    email: String!
+    name: String!
+    createdAt: String!
+    updatedAt: String!
   }
 `;
-
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   playground: true,
-  introspection: true
+  introspection: true,
+  context: async ({ req, connection, payload }) => {
+    if (connection) {
+      return { isAuth: payload.authToken };
+    }
+    return { isAuth: req.isAuth, userId: req.userId };
+  }
 });
 
 module.exports = server;
