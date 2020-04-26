@@ -1,5 +1,19 @@
 This is a starter template for [Next.js](https://nextjs.org/) and [Graphql](https://graphql.org/) [Apollo Server](https://www.apollographql.com/).
 
+## Setting the project locally
+
+- Install `yarn` package manager if not already
+
+- Run the following script for installing all the dependencies
+
+```bash
+yarn setup
+```
+- Create a `.env` file in the root of the project and add the following variables
+```
+JWT_SECRET = YOU_SECRET
+MONGODB_URI = mongodb://YOUR_URL
+```
 ## Starting the project in Development mode
 
 Run the following script for concurrently starting `graphql server` and `next.js` application
