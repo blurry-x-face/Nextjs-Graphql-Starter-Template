@@ -6,9 +6,9 @@ const typeDefs = gql`
     users: [User!]!
     user(userId: ID!): User!
     self: Self!
-    login(email: String!, password: String!): AuthData!
   }
   type Mutation {
+    login(email: String!, password: String!): AuthData!
     createUser(userInput: UserInput): AuthData!
     updateUser(updateUser: UpdateUser): User!
   }
@@ -24,16 +24,19 @@ const typeDefs = gql`
   }
   type AuthData {
     userId: ID!
+    userName: String
     token: String!
     tokenExpiration: Int!
   }
   input UserInput {
     email: String!
     name: String!
+    password: String!
   }
   input UpdateUser {
     email: String
     name: String
+    password: String
   }
   type Self {
     _id: ID!

@@ -27,6 +27,7 @@ const UserQueries = {
     try {
       if (context.isAuth) {
         const user = await User.findById(userId);
+        if (!user) throw Error("You need to authenticate first");
         return user;
       } else {
         throw Error("You need to authenticate first");
@@ -39,28 +40,11 @@ const UserQueries = {
     try {
       if (context.isAuth) {
         const user = await User.findById(context.userId);
+        if (!user) throw Error("You need to authenticate first");
         return user;
       } else {
         throw Error("You need to authenticate first");
       }
-    } catch (err) {
-      throw err;
-    }
-  },
-  login: async (parent, { email, password }) => {
-    try {
-      const user = await User.findOne({ email, password });
-      if (!user) {
-        throw new Error("User does not Exists");
-      }
-      const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
-        expiresIn: "1h"
-      });
-      return {
-        userId: user.id,
-        token,
-        tokenExpiration: 1
-      };
     } catch (err) {
       throw err;
     }
@@ -71,6 +55,26 @@ const UserQueries = {
  * User Mutations
  */
 const UserMutation = {
+  login: async (parent, { email, password }) => {
+    try {
+      const user = await User.findOne({ email, password });
+      if (!user) {
+        throw new Error("User does not Exists");
+      }
+      const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+        expiresIn: "1h"
+      });
+      console.log(user.name);
+      return {
+        userId: user.id,
+        userName: user.name,
+        token,
+        tokenExpiration: 1
+      };
+    } catch (err) {
+      throw err;
+    }
+  },
   createUser: async (parent, { userInput }) => {
     try {
       const user = await User.findOne({

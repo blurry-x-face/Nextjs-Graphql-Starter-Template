@@ -2,7 +2,7 @@ var express = require("express");
 const server = require("./schema/index");
 const auth = require("./middleware/auth.js");
 var cors = require("cors");
-const config = require("./config")
+const config = require("./config");
 
 require("./db");
 
@@ -22,11 +22,11 @@ var app = express();
       return callback(null, true);
     }
   })
-);
- */
+); */
+
 app.use(auth);
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app});
 
 app.listen(4000);
 console.log("Running a GraphQL API server at http://localhost:4000/graphql");
