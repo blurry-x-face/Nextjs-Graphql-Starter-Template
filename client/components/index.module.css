@@ -1,0 +1,16 @@
+.navwrapper {
+  flex-grow: 1 !important;
+}
+
+.menubutton {
+  margin-right: auto !important;
+}
+
+.title {
+  flex-grow: 1 !important;
+}
+
+.buttonstyles {
+  margin-left: 20px !important;
+  padding: 10px !important;
+}

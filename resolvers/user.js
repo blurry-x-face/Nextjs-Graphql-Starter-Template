@@ -59,7 +59,7 @@ const UserMutation = {
     try {
       const user = await User.findOne({ email, password });
       if (!user) {
-        throw new Error("User does not Exists");
+        throw new Error("Please confirm your Email/Password");
       }
       const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
         expiresIn: "1h"
