@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "dev": "concurrently \"npm run server\" \"cd ./client && yarn dev\""
+    "dev": "concurrently \"yarn server server\" \"cd ./client && yarn dev\"",
+    "setup": "yarn && cd client && yarn"
   },
   "keywords": [],
   "author": "",
